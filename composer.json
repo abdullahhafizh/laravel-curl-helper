@@ -1,0 +1,22 @@
+{
+    "name": "abdullahhafizh/laravel-curl-helper",
+    "description": "Laravel curl helper and logs",
+    "type": "metapackage",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "Abdullah Hafizh",
+            "email": "hafizh@hifiez.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "suggest": {
+        "hirak/prestissimo": "Speed up composer install."
+    },
+    "autoload": {
+        "psr-4": {
+            "AbdullahHafizh\\CurlHelper\\": "src/"
+        }
+    }
+}
