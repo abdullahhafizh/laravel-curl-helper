@@ -1,25 +1,37 @@
-{
-    "name": "abdullahhafizh/laravel-curl-helper",
-    "description": "Laravel curl helper and logs",
-    "type": "metapackage",
-    "license": "mit",
-    "authors": [
-        {
-            "name": "Abdullah Hafizh",
-            "email": "hafizh@hifiez.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {},
-    "suggest": {
-        "hirak/prestissimo": "Speed up composer install."
-    },
-    "autoload": {
-        "psr-4": {
-            "AbdullahHafizh\\LaravelCurlHelper\\": "src/"
-        },
-        "files": [
-          "src/helper.php"
-      ]
-    }
-}
+{                                                                                                            
+    "name": "abdullahhafizh/laravel-curl-helper",                                                             
+    "description": "Laravel Curl Helper Package.",                                                            
+    "keywords": [                                                                                            
+        "laravel",                                                                                           
+        "curl",                                                                                        
+        "server-side",                                                                                       
+        "api",                                                                                            
+        "rest",                                                                                              
+        "powerfull",                                                                                         
+        "response"                                                                                           
+    ],                                                                                                       
+    "type": "library",                                                                                       
+    "license": "mit",                                                                                        
+    "authors": [                                                                                             
+        {                                                                                                    
+            "name": "Abdullah Hafizh",                                                                       
+            "email": "hafizh@hifiez.com"                                                                     
+        }                                                                                                    
+    ],                                                                                                       
+    "require": {                                                                                             
+        "php": ">=5.5.9"                                                                                     
+    },                                                                                                       
+    "suggest": {                                                                                             
+        "hirak/prestissimo": "Plugin for downloads packages in parallel to speed up the installation process."
+    },                                                                                                       
+    "autoload": {                                                                                            
+        "psr-4": {                                                                                           
+            "AbdullahHafizh\\LaravelCurlHelper\\": "src/"                                                    
+        },                                                                                                   
+        "files": [                                                                                           
+            "src/helper.php"                                                                                 
+        ]                                                                                                    
+    },                                                                                                       
+    "minimum-stability": "dev",                                                                              
+    "prefer-stable": true                                                                                    
+}                                                                                                            
