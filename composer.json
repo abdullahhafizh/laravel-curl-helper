@@ -16,7 +16,10 @@
     },
     "autoload": {
         "psr-4": {
-            "AbdullahHafizh\\CurlHelper\\": "src/"
-        }
+            "AbdullahHafizh\\LaravelCurlHelper\\": "src/"
+        },
+        "files": [
+          "src/helper.php"
+      ]
     }
 }
