@@ -3,18 +3,17 @@
 if(!function_exists('curlHelper')) {
 	function curlHelper($endpoint, $method = 'POST', $payload = [], $log_context = [])
 	{
-		$url = env('curl_base_url', null) . $endpoint;
+		$url = env('CURL_BASE_URL', null) . $endpoint;
 		$payload = !empty($payload) ? $payload : request()->all();
 
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-			// CURLOPT_URL => "http://localhost/vm-minuman-service/public",
 			CURLOPT_URL => $url,
-			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_RETURNTRANSFER => (bool)env('CURLOPT_RETURNTRANSFER', true),
 			CURLOPT_ENCODING => "",
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 30,
+			CURLOPT_MAXREDIRS => (int)env('CURLOPT_MAXREDIRS', 10),
+			CURLOPT_TIMEOUT => (int)env('CURLOPT_TIMEOUT', 30),
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => $method,
 			CURLOPT_POSTFIELDS => json_encode($payload),
@@ -32,7 +31,7 @@ if(!function_exists('curlHelper')) {
 
 		if ($err) {
 			logError($url, $payload, $log_context, $err);
-			return "cURL Error #:" . $err;
+			return response()->json("cURL Error #:" . $err, 500);
 		} else {
 			logInfo($url, $payload, $log_context, $response);
 			return $response;
@@ -66,12 +65,20 @@ if(!function_exists('logInit')) {
 	}
 }
 
+if(!function_exists('getExecutionId')) {
+	function getExecutionId()
+	{
+		return date('YmdHis') . '-' . (string) \Illuminate\Support\Str::uuid() . '-' . \Illuminate\Support\Str::random(12);
+	}
+}
+
 if(!function_exists('logError')) {
 	function logError($url, $payload, $log_context, $err)
 	{
+		$execId = getExecutionId();
 		$log = \Log::stack(['curl', 'curl-error']);
-		$log->error('cURL Exec ' . $url . '.' . PHP_EOL . 'Payload:' . prettyResponse($payload) . PHP_EOL, $log_context);
-		$log->error('cURL Error #:' . $err . PHP_EOL, $log_context);
+		$log->error('cURL Exec ' . $url . '.' . PHP_EOL . 'Payload:' . prettyResponse($payload) . PHP_EOL . 'Exec ID: ' . $execId . PHP_EOL, $log_context);
+		$log->error('cURL Error #:' . $err . PHP_EOL . 'Exec ID: ' . $execId . PHP_EOL, $log_context);
 		logDB($url, $payload, 'cURL Error #:' . $err);
 	}
 }
@@ -79,9 +86,10 @@ if(!function_exists('logError')) {
 if(!function_exists('logInfo')) {
 	function logInfo($url, $payload, $log_context, $response)
 	{
+		$execId = getExecutionId();
 		$log = \Log::stack(['curl', 'curl-info']);
-		$log->info('cURL Exec ' . $url . '.' . PHP_EOL . 'Payload:' . prettyResponse($payload) . PHP_EOL, $log_context);
-		$log->info('cURL Response:' . prettyResponse($response) . PHP_EOL, $log_context);
+		$log->info('cURL Exec ' . $url . '.' . PHP_EOL . 'Payload:' . prettyResponse($payload) . PHP_EOL . 'Exec ID: ' . $execId . PHP_EOL, $log_context);
+		$log->info('cURL Response:' . prettyResponse($response) . PHP_EOL . 'Exec ID: ' . $execId . PHP_EOL, $log_context);
 		logDB($url, $payload, $response);
 	}
 }
@@ -111,8 +119,8 @@ if(!function_exists('checkDB')) {
 			{
 				$table->increments('id');
 				$table->string('url');
-				$table->text('payload');
-				$table->text('response');
+				$table->text('payload')->nullable();
+				$table->text('response')->nullable();
 				$table->timestamps();
 			});
 		}
