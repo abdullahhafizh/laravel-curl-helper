@@ -1,10 +1,16 @@
 <?php
 
 if(!function_exists('curlHelper')) {
-	function curlHelper($endpoint, $method = 'POST', $payload = [], $log_context = [])
+	function curlHelper($endpoint, $method = 'POST', $payload = [], $header = [], $log_context = [])
 	{
 		$url = env('CURL_BASE_URL', null) . $endpoint;
 		$payload = !empty($payload) ? $payload : request()->all();
+		$head = array(
+			"content-type: application/json"
+		);
+		if (!empty($header)) {
+			$head = array_merge($head, $header);
+		}
 
 		$curl = curl_init();
 
@@ -17,9 +23,7 @@ if(!function_exists('curlHelper')) {
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => $method,
 			CURLOPT_POSTFIELDS => json_encode($payload),
-			CURLOPT_HTTPHEADER => array(
-				"content-type: application/json"
-			),
+			CURLOPT_HTTPHEADER => $head,
 		));
 
 		$response = curl_exec($curl);
